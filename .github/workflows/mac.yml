@@ -60,7 +60,7 @@ jobs:
           security list-keychains -d user -s "$RUNNER_TEMP/ci.keychain-db"
           security default-keychain -d user -s "$RUNNER_TEMP/ci.keychain-db"
           code=0
-          "$bin" --package-smoke --headless > "$work/smoke.log" 2>&1 &
+          CH_ASSUME_KEYCHAIN=0 "$bin" --package-smoke --headless > "$work/smoke.log" 2>&1 &
           pid=$!
           for i in $(seq 1 600); do kill -0 "$pid" 2>/dev/null || break; sleep 1; done
           if kill -0 "$pid" 2>/dev/null; then
