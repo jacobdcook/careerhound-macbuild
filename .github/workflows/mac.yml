@@ -53,12 +53,12 @@ jobs:
           ditto -x -k "$zipf" "$work"
           bin="$work/CareerHound.app/Contents/MacOS/CareerHound"
           [ -x "$bin" ] || { echo "ERROR: zip does not contain CareerHound.app"; exit 1; }
+          export HOME="$RUNNER_TEMP/smokehome"; mkdir -p "$HOME/Library/Keychains"
           security create-keychain -p ci "$RUNNER_TEMP/ci.keychain-db"
           security set-keychain-settings "$RUNNER_TEMP/ci.keychain-db"
           security unlock-keychain -p ci "$RUNNER_TEMP/ci.keychain-db"
           security list-keychains -d user -s "$RUNNER_TEMP/ci.keychain-db"
           security default-keychain -d user -s "$RUNNER_TEMP/ci.keychain-db"
-          export HOME="$RUNNER_TEMP/smokehome"; mkdir -p "$HOME"
           code=0
           "$bin" --package-smoke --headless > "$work/smoke.log" 2>&1 &
           pid=$!
